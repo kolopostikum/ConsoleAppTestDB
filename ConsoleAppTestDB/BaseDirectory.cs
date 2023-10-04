@@ -13,7 +13,10 @@ namespace ConsoleAppTestDB
 
         public static async Task OutputOriginalRecords()
         {
-            string sqlExpression = "SELECT DISTINCT * FROM Employees ORDER BY Name";
+            string sqlExpression = "SELECT DISTINCT Name, Birthday, Sex  FROM Employees " +
+                "ORDER BY Name";
+
+            //string sqlExpression = "SELECT DISTINCT * FROM Employees ORDER BY Name";
 
             await OutputRecords(sqlExpression);
 
@@ -32,18 +35,18 @@ namespace ConsoleAppTestDB
                 if (reader.HasRows) // если есть данные
                 {
                     // выводим названия столбцов
-                    string columnName1 = reader.GetName(1);
-                    string columnName2 = reader.GetName(2);
-                    string columnName3 = reader.GetName(3);
+                    string columnName1 = reader.GetName(0);
+                    string columnName2 = reader.GetName(1);
+                    string columnName3 = reader.GetName(2);
                     string columnName4 = "Age";
 
                     Console.WriteLine($"{columnName1}||\t{columnName2}||\t{columnName3}||\t{columnName4}");
 
-                    while (await reader.ReadAsync()) // построчно считываем данные
+                    while (await reader.ReadAsync()) 
                     {
-                        object name = reader.GetValue(1);
-                        object birthDay = reader.GetValue(2);
-                        object sex = reader.GetValue(3);
+                        object name = reader.GetValue(0);
+                        object birthDay = reader.GetValue(1);
+                        object sex = reader.GetValue(2);
                         object age = Employee.GetAge((DateTime)birthDay);
 
                         Console.WriteLine($"{name}||\t{birthDay}||\t{sex}||\t{age}");

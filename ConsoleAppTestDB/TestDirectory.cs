@@ -22,14 +22,13 @@ namespace ConsoleAppTestDB
             var direction = new TestDirectory();
             for (int i = 1; i <= 10000; i++)
             {
-                if (i%100 == 0)
-                    await direction.AddPackEmployeeToDirectory(direction.pack);
-                
                 var name = Faker.Name.Last() + " " + Faker.Name.First() + " " + Faker.Name.Middle();
                 var subBirthday = DateTime.Now;
                 var sex = rnd.Next(0, 2) == 0 ? "Male" : "Female";
                 var rndEmployee = new Employee(name, subBirthday, sex);
-                direction.pack[i%100] = rndEmployee;
+                direction.pack[i % 100] = rndEmployee;
+                if (i%100 == 0)
+                    await direction.AddPackEmployeeToDirectory(direction.pack);
             }
 
             await AddFTestEmployees(direction);
@@ -82,6 +81,9 @@ namespace ConsoleAppTestDB
 
             string sqlExpression = "SELECT DISTINCT Name, Birthday, Sex  FROM Employees " +
                 "WHERE LEFT(Name, 1) = \'F\' AND Sex = \'Male\'";
+
+            //string sqlExpression = "SELECT DISTINCT * FROM Employees "
+            //    + "WHERE LEFT(Name, 1) = \'F\' AND Sex = \'Male\'";
 
             await BaseDirectory.OutputRecords(sqlExpression);
 
